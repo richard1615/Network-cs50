@@ -3,8 +3,10 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
+from datetime import datetime
 
-from .models import User
+from .models import User, posts
+from .forms import postForm
 
 
 def index(request):
@@ -61,3 +63,15 @@ def register(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "network/register.html")
+
+def user_posts(request):
+    if request.method == "POST":
+        form = postForm(request.POST)
+        if form.is_valid():
+            user = request.user
+            content = form.cleaned_data.get("content")
+            created_at = datetime.now()
+            post_object = posts(created_by=user, content=content, created_at=created_at)
+            post_object.save()
+            return HttpResponseRedirect(reverse("index"))
+    return render(request, "network/user_post.html", {'form': postForm()})
