@@ -74,4 +74,5 @@ def user_posts(request):
             post_object = posts(created_by=user, content=content, created_at=created_at)
             post_object.save()
             return HttpResponseRedirect(reverse("index"))
-    return render(request, "network/user_post.html", {'form': postForm()})
+    user_posts = posts.objects.filter(created_by = request.user)
+    return render(request, "network/user_post.html", {'posts' : user_posts ,'form': postForm()})

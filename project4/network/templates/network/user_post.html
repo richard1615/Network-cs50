@@ -10,4 +10,10 @@
     </form>
 </div>
 
+{% for post in posts %}
+    <div>
+        <p>{{ post.content|safe }}</p>
+    </div>
+{% endfor %}
+
 {% endblock body %}
