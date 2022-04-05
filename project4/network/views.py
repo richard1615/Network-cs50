@@ -10,11 +10,7 @@ from .forms import postForm
 
 
 def index(request):
-    user = request.user
-    # TODO: Put user data and render them
-    user_posts = posts.objects.filter(created_by = user)
-    return render(request, "network/index.html", {'posts' : user_posts})
-
+    return HttpResponseRedirect(reverse('all_posts'))
 
 def login_view(request):
     if request.method == "POST":
@@ -79,3 +75,8 @@ def all_posts(request):
             return HttpResponseRedirect(reverse("user_posts"))
     all_posts = posts.objects.all().order_by("-created_at")
     return render(request, "network/posts.html", {'posts' : all_posts, 'form' : postForm()})
+
+def profile(request, username):
+    user = User.objects.get(username=username)
+    user_posts = posts.objects.filter(created_by=user).order_by("-created_at")
+    return render(request, "network/profile.html", {'user' : user, 'posts' : user_posts})
