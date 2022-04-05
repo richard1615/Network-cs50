@@ -1,6 +1,7 @@
 {% extends "network/layout.html" %}
 
 {% block body %}
+    <h3>Your Posts</h3>
     {% for post in posts %}
         <div>
             <p>{{ post.content|safe }}</p>

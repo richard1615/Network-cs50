@@ -10,7 +10,9 @@ from .forms import postForm
 
 
 def index(request):
-    user_posts = posts.objects.filter(created_by = request.user)
+    user = request.user
+    # TODO: Put user data and render them
+    user_posts = posts.objects.filter(created_by = user)
     return render(request, "network/index.html", {'posts' : user_posts})
 
 
