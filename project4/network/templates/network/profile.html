@@ -1,0 +1,17 @@
+{% extends 'network/layout.html' %}
+
+{% block body %}
+<section>
+    <div class="container">
+        <p>{{ user.username }}</p>
+    </div>
+</section>
+    {% for post in posts %}
+    <div>
+        <p><a href="#">{{ post.created_by.username }}</a></p>
+        <p>{{ post.content|safe }}</p>
+        <p>{{ post.created_at }}</p>
+        <p>{{ post.likes }}</p>
+    </div>
+    {% endfor %}
+{% endblock body %}
