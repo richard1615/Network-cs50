@@ -1,0 +1,17 @@
+{% extends 'network/layout.html' %}
+
+{% block body %}
+<h3>All Posts</h3>
+{% if user.is_authenticated %}
+<div>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.media}}
+        {{ form.as_p }}
+        <input type="submit" class="btn btn-primary">
+    </form>
+</div>
+{% endif %}
+
+{% include 'network/posts.html' %}
+{% endblock body %}

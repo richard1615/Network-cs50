@@ -1,24 +1,44 @@
-{% extends 'network/layout.html' %}
+{% load static %}
 
-{% block body %}
-<h3>All Posts</h3>
-{% if user.is_authenticated %}
-<div>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.media}}
-        {{ form.as_p }}
-        <input type="submit">
-    </form>
-</div>
-{% endif %}
+<script src="{% static 'network/like.js' type="text/savascript" %}"></script>
 
-{% for post in posts %}
-    <div>
-        <p><a href="{% url 'profile' post.created_by.username %}">{{ post.created_by.username }}</a></p>
-        <p>{{ post.content|safe }}</p>
-        <p>{{ post.created_at }}</p>
-        <p>{{ post.likes }}</p>
+{% for post in page_obj %}
+    <div class="card" style="width: 20rem; margin: 20px; display: flexbox;">
+      <div class="card-body">
+
+        <h5 class="card-title"><a href="{% url 'profile' post.created_by.username %}">{{ post.created_by.username }}</a></h5>
+        
+        <h6 class="card-subtitle mb-2 text-muted">{{ post.created_at }}</h6>
+        
+        <p class="card-text" data-id="text-{{ post.id }}" >{{ post.content }}</p>
+
+        <textarea data-id="edit-form-{{ post.id }}" cols="30" rows="10" style="display: none;"></textarea>
+
+        <p class="card-text" data-id = "like-cnt-{{post.id}}">{{ post.likes }}</p>
+        
+        <button class="btn mr-1 d-inline-block" style="background-color:white; border-color: red;" data-id="like-btn-{{post.id}}" onclick="like('{{ post.id }}')"></button>   
+        
+        {% if request.user == post.created_by %}
+            <a onclick="edit({{post.id}})" class="card-link btn btn-info btn-sm" data-id="edit-btn-{{ post.id }}">Edit</a>
+        {% endif %}
+        
+      </div>
     </div>
 {% endfor %}
-{% endblock body %}
+
+<nav aria-label="Page navigation example">
+    <span class="current">
+        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+    </span>
+    <br>
+    <ul class="pagination">
+      {% if page_obj.has_previous %}
+        <li class="page-item"><a class="page-link" href="?page=1">&laquo; First</a></li>
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+      {% endif %}
+      {% if page_obj.has_next %}
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a></li>
+      {% endif %}
+    </ul>
+  </nav>

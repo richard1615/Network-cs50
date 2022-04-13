@@ -1,17 +1,19 @@
 {% extends 'network/layout.html' %}
+{% load static %}
 
 {% block body %}
-<section>
-    <div class="container">
-        <p>{{ user.username }}</p>
-    </div>
-</section>
-    {% for post in posts %}
-    <div>
-        <p><a href="#">{{ post.created_by.username }}</a></p>
-        <p>{{ post.content|safe }}</p>
-        <p>{{ post.created_at }}</p>
-        <p>{{ post.likes }}</p>
-    </div>
-    {% endfor %}
+<script src = "{% static 'network/like.js' type="text/savascript" %}"></script>
+
+<div class="border" style = "margin: 20px; padding: 20px;">
+    <p>{{ user.username }}</p>
+    <p data-id = "follow-cnt-{{ user.id }}">{{ followers }}</p>
+    {% if is_current_user == False %}
+        {% if is_following %}
+            <button class="btn btn-info" data-id = "follow-btn-{{ user.id }}" onclick = "followUser({{ user.id }})">Unfollow</button>
+        {% else %}
+            <button class="btn btn-info" onclick="followUser({{ user.id }})" data-id="follow-btn-{{ user.id }}">Follow</button>
+        {% endif %}
+    {% endif %}
+</div>
+    {% include 'network/posts.html' %}
 {% endblock body %}
